@@ -136,122 +136,149 @@ annotate satinfotech.GateEntry with @(
         Data : [
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: SerialNo
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: LocationCode
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: StationFrom
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: Description
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: ItemDescription
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: DocumentDate
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: Time
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: PostingDate
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: LRNo
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: LRNoDate
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: VehicleNo
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: Transporter
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: TransporterName
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: Note
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: StoreLevel
             },
+            // {
+            //     $Type: 'UI.DataField',
+            //     ![@HTML5.CssDefaults]: {width:'7rem'},
+            //     Value: AverageWeight
+            // },
             {
                 $Type: 'UI.DataField',
-                Value: AverageWeight
-            },
-            {
-                $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: ContainerWeight
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: AcceptedWeight
             },
+            // {
+            //     $Type: 'UI.DataField',
+            //     ![@HTML5.CssDefaults]: {width:'7rem'},
+            //     Value: GrossWeightSupplier
+            // },
             {
                 $Type: 'UI.DataField',
-                Value: GrossWeightSupplier
-            },
-            {
-                $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: NetWeightSupplier
             },
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: DifferenceWeight
+            // },
             {
                 $Type: 'UI.DataField',
-                Value: DifferenceWeight
-            },
-            {
-                $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: PackingMaterial
             },
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: WeightPackingMaterial
+            // },
+            // {
+            //     $Type: 'UI.DataField',
+            //     Value: BagWeightParty
+            // },
             {
                 $Type: 'UI.DataField',
-                Value: WeightPackingMaterial
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: BagWeightParty
-            },
-            {
-                $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: BagWeightLX
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: TypeOfScrap
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: UnloadingBy
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: ChallanNo
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: SourceNo
             },
             {
                 $Type: 'UI.DataField',
+                ![@HTML5.CssDefaults]: {width:'5rem'},
                 Value: SourceType
             }
         ]
