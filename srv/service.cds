@@ -2,13 +2,13 @@ using {com.satinfotech.sat as db} from '../db/schema';
 
 service satinfotech {
 
-    entity GateEntry as projection on db.GateEntry;
+    entity Entry as projection on db.Entry;
 
 }
 
-annotate satinfotech.GateEntry with @odata.draft.enabled;
+annotate satinfotech.Entry with @odata.draft.enabled;
 
-annotate satinfotech.GateEntry with @(
+annotate satinfotech.Entry with @(
     UI.LineItem: [
         {
             Label: 'Serial Number',
@@ -80,6 +80,86 @@ annotate satinfotech.GateEntry with @(
             ![@HTML5.CssDefaults]: {width:'5rem'},
             Value: Note
         },
+    ],
+    UI.FieldGroup #GateEntryDetails: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: SerialNo
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: LocationCode
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: StationFrom
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Description
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ItemDescription
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: DocumentDate
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Time
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PostingDate
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: LRNo
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: LRNoDate
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: VehicleNo
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Transporter
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: TransporterName
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Note
+            },
+        ]
+    },
+
+    UI.Facets: [{
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'GateEntryFacet',
+        Label : 'Gate Entry Details',
+        Target: '@UI.FieldGroup#GateEntryDetails'
+    },
+    {
+            $Type : 'UI.ReferenceFacet',
+            ID    : 'MaterialInfoFacet',
+            Label : 'Material Information',
+            Target: 'Details/@UI.LineItem',
+    }
+    ]
+);
+
+annotate satinfotech.Entry.Details with @(
+    UI.LineItem: [
         {
             Label: 'Store Level',
             ![@HTML5.CssDefaults]: {width:'5rem'},
@@ -161,66 +241,12 @@ annotate satinfotech.GateEntry with @(
             Value: SourceType
         }
     ],
-    UI.FieldGroup #GateEntryDetails: {
-        $Type: 'UI.FieldGroupType',
-        Data : [
-            {
-                $Type: 'UI.DataField',
-                Value: SerialNo
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: LocationCode
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: StationFrom
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: Description
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: ItemDescription
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: DocumentDate
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: Time
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: PostingDate
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: LRNo
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: LRNoDate
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: VehicleNo
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: Transporter
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: TransporterName
-            },
-            {
-                $Type: 'UI.DataField',
-                Value: Note
-            },
-            {
+);
+
+annotate satinfotech.Entry.Details with @(UI.FieldGroup #WeightInformation: {
+    $Type: 'UI.FieldGroupType',
+    Data : [
+        {
                 $Type: 'UI.DataField',
                 Value: StoreLevel
             },
@@ -284,13 +310,5 @@ annotate satinfotech.GateEntry with @(
                 $Type: 'UI.DataField',
                 Value: SourceType
             }
-        ]
-    },
-
-    UI.Facets: [{
-        $Type : 'UI.ReferenceFacet',
-        ID    : 'GateEntryFacet',
-        Label : 'Gate Entry Details',
-        Target: '@UI.FieldGroup#GateEntryDetails'
-    }]
-);
+    ]
+});

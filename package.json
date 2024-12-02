@@ -17,9 +17,9 @@
   },
   "scripts": {
     "start": "cds-serve",
-    "watch-gate-entry": "cds watch --open gate-entry/webapp/index.html?sap-ui-xx-viewCache=false"
+    "watch-project1": "cds watch --open project1/webapp/index.html?sap-ui-xx-viewCache=false"
   },
   "sapux": [
-    "app/gate-entry"
+    "app/project1"
   ]
 }

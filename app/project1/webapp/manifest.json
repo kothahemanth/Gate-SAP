@@ -1,7 +1,7 @@
 {
   "_version": "1.65.0",
   "sap.app": {
-    "id": "gateentry",
+    "id": "project1",
     "type": "application",
     "i18n": "i18n/i18n.properties",
     "applicationVersion": {
@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.15.3",
-      "toolsId": "0f51d950-028d-4a64-a0dd-d77abdf67970"
+      "toolsId": "e81d7de5-6918-40e7-8448-766d69129de5"
     },
     "dataSources": {
       "mainService": {
@@ -60,7 +60,7 @@
       "i18n": {
         "type": "sap.ui.model.resource.ResourceModel",
         "settings": {
-          "bundleName": "gateentry.i18n.i18n"
+          "bundleName": "project1.i18n.i18n"
         }
       },
       "": {
@@ -85,28 +85,28 @@
       "routes": [
         {
           "pattern": ":?query:",
-          "name": "GateEntryList",
-          "target": "GateEntryList"
+          "name": "EntryList",
+          "target": "EntryList"
         },
         {
-          "pattern": "GateEntry({key}):?query:",
-          "name": "GateEntryObjectPage",
-          "target": "GateEntryObjectPage"
+          "pattern": "Entry({key}):?query:",
+          "name": "EntryObjectPage",
+          "target": "EntryObjectPage"
         }
       ],
       "targets": {
-        "GateEntryList": {
+        "EntryList": {
           "type": "Component",
-          "id": "GateEntryList",
+          "id": "EntryList",
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "contextPath": "/GateEntry",
+              "contextPath": "/Entry",
               "variantManagement": "Page",
               "navigation": {
-                "GateEntry": {
+                "Entry": {
                   "detail": {
-                    "route": "GateEntryObjectPage"
+                    "route": "EntryObjectPage"
                   }
                 }
               },
@@ -120,14 +120,14 @@
             }
           }
         },
-        "GateEntryObjectPage": {
+        "EntryObjectPage": {
           "type": "Component",
-          "id": "GateEntryObjectPage",
+          "id": "EntryObjectPage",
           "name": "sap.fe.templates.ObjectPage",
           "options": {
             "settings": {
               "editableHeaderContent": false,
-              "contextPath": "/GateEntry"
+              "contextPath": "/Entry"
             }
           }
         }

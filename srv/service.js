@@ -1,44 +1,35 @@
 const cds = require('@sap/cds');
 
 module.exports = cds.service.impl(async function () {
-  this.before(['CREATE', 'UPDATE'], 'GateEntry', (req) => {
-    const { AcceptedWeight, BagWeightParty } = req.data;
+  
+  this.before(['CREATE', 'UPDATE'], 'Entry', async (req) => {
+    const { Details } = req.data;
 
-    if (AcceptedWeight != null && BagWeightParty != null) {
-      if (typeof AcceptedWeight === 'number' && typeof BagWeightParty === 'number') {
-        const difference = AcceptedWeight - BagWeightParty;
+    if (Details && Array.isArray(Details)) {
+        Details.forEach((detail) => {
+            const { AcceptedWeight, BagWeightParty } = detail;
 
-        req.data.NetWeightSupplier = difference;
-        // req.data.WeightPackingMaterial = difference; 
-        // req.data.BagWeightParty = difference; 
-        // req.data.GrossWeightSupplier = dis;
+            if (AcceptedWeight == null || BagWeightParty == null) {
+                req.error(400, 'AcceptedWeight and BagWeightParty are required in Details.');
+            }
 
-      } else {
-        req.error(400, 'AcceptedWeight and NetWeightSupplier must be numeric values.');
-      }
-    } else {
-      req.error(400, 'AcceptedWeight and NetWeightSupplier must be provided.');
+            if (typeof AcceptedWeight !== 'number' || typeof BagWeightParty !== 'number') {
+                req.error(400, 'AcceptedWeight and BagWeightParty must be numeric in Details.');
+            }
+
+            const grossWeight = AcceptedWeight;
+            const netWeight = AcceptedWeight - BagWeightParty;
+            const differenceWeight = AcceptedWeight - netWeight;
+            const weightPackingMaterial = AcceptedWeight - netWeight;
+            const averageWeight = AcceptedWeight + differenceWeight;
+
+            detail.GrossWeightSupplier = grossWeight;
+            detail.NetWeightSupplier = netWeight;
+            detail.DifferenceWeight = differenceWeight;
+            detail.WeightPackingMaterial = weightPackingMaterial;
+            detail.AverageWeight = averageWeight;
+        });
     }
-  });
+});
 
-  this.before(['CREATE', 'UPDATE'], 'GateEntry', (req) => {
-    const { AcceptedWeight, NetWeightSupplier } = req.data;
-
-    if (AcceptedWeight != null && NetWeightSupplier != null) {
-      if (typeof AcceptedWeight === 'number' && typeof NetWeightSupplier === 'number') {
-
-        const average = AcceptedWeight - NetWeightSupplier;
-        const dis = AcceptedWeight;
-
-        req.data.GrossWeightSupplier = dis;
-        req.data.DifferenceWeight = average;
-        req.data.WeightPackingMaterial = average;
-
-      } else {
-        req.error(400, 'AcceptedWeight and DifferenceWeight must be numeric values.');
-      }
-    } else {
-      req.error(400, 'AcceptedWeight and DifferenceWeight must be provided.');
-    }
-  });
 });

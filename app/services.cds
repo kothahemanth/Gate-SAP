@@ -1,2 +1,2 @@
 
-using from './gate-entry/annotations';
+using from './project1/annotations';
