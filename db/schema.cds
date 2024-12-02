@@ -29,7 +29,7 @@ entity Entry : cuid, managed {
     @title: 'Transporter'
     Transporter : String(100);                        
     @title: 'Transporter Name'
-    TransporterName : String(100);                    
+    TransporterName : Association to Transporters;                    
     @title: 'Note'
     Note : String(500);
     Details : Composition of many {                             
@@ -66,4 +66,9 @@ entity Entry : cuid, managed {
         @title: 'Source Type'
         SourceType : String(50);  
 }
+}
+
+entity Transporters {
+    @title: 'Name'
+    Key Name : String(100);
 }

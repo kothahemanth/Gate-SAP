@@ -3,10 +3,30 @@ using {com.satinfotech.sat as db} from '../db/schema';
 service satinfotech {
 
     entity Entry as projection on db.Entry;
+    entity Transporters as projection on db.Transporters;
 
 }
 
 annotate satinfotech.Entry with @odata.draft.enabled;
+annotate satinfotech.Transporters with @odata.draft.enabled;
+
+annotate satinfotech.Transporters with @(UI.LineItem: [
+    {
+        $Type: 'UI.DataField',
+        Value: Name
+    },
+],
+UI.FieldGroup #TransportDetails: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: Name
+            },
+        ]
+    }
+
+);
 
 annotate satinfotech.Entry with @(
     UI.LineItem: [
@@ -73,7 +93,7 @@ annotate satinfotech.Entry with @(
         {
             Label: 'Transporter Name',
             ![@HTML5.CssDefaults]: {width:'5rem'},
-            Value: TransporterName
+            Value: TransporterName_Name
         },
         {
             Label: 'Note',
@@ -134,7 +154,7 @@ annotate satinfotech.Entry with @(
             },
             {
                 $Type: 'UI.DataField',
-                Value: TransporterName
+                Value: TransporterName_Name
             },
             {
                 $Type: 'UI.DataField',
@@ -312,3 +332,20 @@ annotate satinfotech.Entry.Details with @(UI.FieldGroup #WeightInformation: {
             }
     ]
 });
+
+annotate satinfotech.Entry with {
+    TransporterName @(
+        // Common.ValueListWithFixedValues: true,
+        Common.ValueList               : {
+            Label         : 'Transporters',
+            CollectionPath: 'Transporters',
+            Parameters    : [
+                {
+                    $Type            : 'Common.ValueListParameterInOut',
+                    LocalDataProperty: TransporterName_Name,
+                    ValueListProperty: 'Name'
+                }
+            ]
+        }
+    );
+};
