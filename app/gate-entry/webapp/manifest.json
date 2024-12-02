@@ -13,7 +13,7 @@
     "sourceTemplate": {
       "id": "@sap/generator-fiori:lrop",
       "version": "1.15.3",
-      "toolsId": "da42ff4e-3207-4c6a-bf02-8e5535224b8a"
+      "toolsId": "0f51d950-028d-4a64-a0dd-d77abdf67970"
     },
     "dataSources": {
       "mainService": {
@@ -101,7 +101,6 @@
           "name": "sap.fe.templates.ListReport",
           "options": {
             "settings": {
-              "initialLoad": true,
               "contextPath": "/GateEntry",
               "variantManagement": "Page",
               "navigation": {
