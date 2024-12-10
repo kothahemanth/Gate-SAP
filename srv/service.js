@@ -52,6 +52,7 @@
 const cds = require('@sap/cds');
 
 module.exports = cds.service.impl(async function () {
+    const PurchaseOrderAPI = await cds.connect.to("API_PRODUCTION_ORDER_2_SRV");
     const { Transporters } = this.entities;
 
     this.before(['CREATE', 'UPDATE'], 'Entry', async (req) => {
@@ -86,15 +87,40 @@ module.exports = cds.service.impl(async function () {
             });
         }
 
-        // Handle TransporterName processing
         if (TransporterName_Name) {
-            // Perform a case-insensitive check for existing transporter
             const existingTransporter = await SELECT.one.from(Transporters).where({ Name: TransporterName_Name });
 
             if (!existingTransporter) {
-                // Create a new transporter entry if not found
                 await INSERT.into(Transporters).entries({ Name: TransporterName_Name });
             }
+        }
+    });
+
+    this.before("READ", "PurchaseOrders", async (req) => {
+        req.query.SELECT.columns = [
+            { ref: ["ManufacturingOrder"] },
+            { ref: ["Material"] },
+            { ref: ["TotalQuantity"] },
+            { ref: ["ProductionUnit"] },
+            { ref: ["to_ProductionOrderItem"], expand: ["*"] }
+        ];
+        try {
+            let res = await PurchaseOrderAPI.run(req.query);
+            console.log(res);
+            if (!Array.isArray(res)) {
+                res = [res];
+            }
+            res.forEach((element) => {
+                element.to_ProductionOrderItem.forEach((item) => {
+                    element.req_material = item.Material;
+                    element.req_requiredquantity = item.RequiredQuantity; 
+                });
+            });
+            console.log(res);
+            return res;
+        } catch (error) {
+            console.error("Error reading SalesOrder:", error);
+            return req.error(500, "Failed to fetch data from SalesOrder service");
         }
     });
 });

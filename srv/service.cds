@@ -1,10 +1,16 @@
 using {com.satinfotech.sat as db} from '../db/schema';
+using { API_PRODUCTION_ORDER_2_SRV as PurchaseOrderAPI } from '../srv/external/API_PRODUCTION_ORDER_2_SRV';
 
 service satinfotech {
 
     entity Entry as projection on db.Entry;
     entity Transporters as projection on db.Transporters;
+    // entity PurchaseOrders as projection on db.PurchaseOrders;
 
+}
+
+entity PurchaseOrder as projection on PurchaseOrderAPI.A_ProductionOrder_2{
+    *
 }
 
 annotate satinfotech.Entry with @odata.draft.enabled;
@@ -170,10 +176,16 @@ annotate satinfotech.Entry with @(
         Target: '@UI.FieldGroup#GateEntryDetails'
     },
     {
-            $Type : 'UI.ReferenceFacet',
-            ID    : 'MaterialInfoFacet',
-            Label : 'Material Information',
-            Target: 'Details/@UI.LineItem',
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'MaterialInfoFacet',
+        Label : 'Material Information',
+        Target: 'Details/@UI.LineItem',
+    },
+    {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'PurchaseInfoFacet',
+        Label : 'Purchase Information',
+        Target: 'Purchase/@UI.LineItem',
     }
     ]
 );
@@ -330,6 +342,71 @@ annotate satinfotech.Entry.Details with @(UI.FieldGroup #WeightInformation: {
                 $Type: 'UI.DataField',
                 Value: SourceType
             }
+    ]
+});
+
+annotate satinfotech.Entry.Purchase with @(
+    UI.LineItem: [
+        {
+            Label: 'Purchase Order',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: ManufacturingOrder
+        },
+        {
+            Label: 'Item',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: ManufacturingOrderItem
+        },
+        {
+            Label: 'Material',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: Material
+        },
+        {
+            Label: 'Quantity',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: TotalQuantity
+        },
+        {
+            Label: 'Quantity Unit',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: ProductionUnit
+        },
+        {
+            Label: 'Storage Location',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: StorageLocation
+        },
+    ],
+);
+
+annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
+    $Type: 'UI.FieldGroupType',
+    Data : [
+        {
+                $Type: 'UI.DataField',
+                Value: ManufacturingOrder
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ManufacturingOrderItem
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Material
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: TotalQuantity
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ProductionUnit
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: StorageLocation
+            },
     ]
 });
 

@@ -7,6 +7,8 @@
   "private": true,
   "dependencies": {
     "@cap-js/postgres": "^1.10.4",
+    "@sap-cloud-sdk/http-client": "^3.24.0",
+    "@sap-cloud-sdk/resilience": "^3.24.0",
     "@sap/cds": "^8",
     "express": "^4"
   },
@@ -21,5 +23,13 @@
   },
   "sapux": [
     "app/project1"
-  ]
+  ],
+  "cds": {
+    "requires": {
+      "API_PRODUCTION_ORDER_2_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_PRODUCTION_ORDER_2_SRV"
+      }
+    }
+  }
 }
