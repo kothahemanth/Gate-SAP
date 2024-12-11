@@ -41,6 +41,8 @@ entity Entry : cuid, managed {
     Note : String(500);
 
     Details : Composition of many {
+    @UI.Hidden 
+    key ID:UUID;
         @title: 'Store Level'
         StoreLevel : String(50);
         @title: 'Average Weight'
@@ -76,6 +78,8 @@ entity Entry : cuid, managed {
     };
 
     Purchase : Composition of many {
+        @UI.Hidden 
+        key ID:UUID;
             @title: 'Purchase Order'
             PurchaseOrder :String(10);
             @title: 'Item'
