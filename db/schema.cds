@@ -1,7 +1,7 @@
 namespace com.satinfotech.sat;
 
 using { managed, cuid } from '@sap/cds/common';
-// using { API_PRODUCTION_ORDER_2_SRV as external } from '../srv/external/API_PRODUCTION_ORDER_2_SRV';
+using { CE_PURCHASEORDER_0001 as external } from '../srv/external/CE_PURCHASEORDER_0001';
 
 entity Entry : cuid, managed {
     key ID : UUID;
@@ -31,6 +31,12 @@ entity Entry : cuid, managed {
     Transporter : String(100);
     @title: 'Transporter Name'
     TransporterName : Association to Transporters;
+    @title: 'Transporter Phone Number'
+    TransporterPh : String(20);
+    @title: 'Driver Name'
+    DriverName : Date;
+    @title: 'Driver Phone Number'
+    Driverph : String(20);
     @title: 'Note'
     Note : String(500);
 
@@ -70,39 +76,24 @@ entity Entry : cuid, managed {
     };
 
     Purchase : Composition of many {
-
             @title: 'Purchase Order'
-            ManufacturingOrder : Decimal(10, 2);
+            PurchaseOrder :String(10);
             @title: 'Item'
-            ManufacturingOrderItem : Decimal(10, 2);
+            PurchaseOrderItem : Decimal(10, 2);
             @title: 'Material'
             Material : String(50);
+            @title: 'Base Unit'
+            BaseUnit : String;
             @title: 'Quantity'
-            TotalQuantity : Decimal(10, 2);
-            @title: 'Quantity Unit'
-            ProductionUnit : String(20);
+            OrderQuantity : Decimal;
             @title: 'Storage Location'
             StorageLocation : String(50);
-
     }
-
-
 }
 
-entity PurchaseOrders  {
-            @title: 'Purchase Order'
-            ManufacturingOrder : Decimal(10, 2);
-            @title: 'Item'
-            ManufacturingOrderItem : Decimal(10, 2);
-            @title: 'Material'
-            Material : String(50);
-            @title: 'Quantity'
-            TotalQuantity : Decimal(10, 2);
-            @title: 'Quantity Unit'
-            ProductionUnit : String(20);
-            @title: 'Storage Location'
-            StorageLocation : String(50);
-}
+entity PurchaseOrders as projection on external.PurchaseOrderItem {
+            *
+};
 
 entity Transporters {
     @title: 'Name'

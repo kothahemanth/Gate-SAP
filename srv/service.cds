@@ -1,15 +1,27 @@
 using {com.satinfotech.sat as db} from '../db/schema';
-using { API_PRODUCTION_ORDER_2_SRV as PurchaseOrderAPI } from '../srv/external/API_PRODUCTION_ORDER_2_SRV';
+// using { API_PRODUCTION_ORDER_2_SRV as PurchaseOrderAPI } from '../srv/external/API_PRODUCTION_ORDER_2_SRV';
 
 service satinfotech {
 
     entity Entry as projection on db.Entry;
     entity Transporters as projection on db.Transporters;
-    // entity PurchaseOrders as projection on db.PurchaseOrders;
+    entity PurchaseOrders as projection on db.PurchaseOrders;
 
 }
 
-entity PurchaseOrder as projection on PurchaseOrderAPI.A_ProductionOrder_2{
+entity PurchaseOrders as projection on db.PurchaseOrders{
+    @title: 'Purchase Order'
+    PurchaseOrder : Decimal(10, 2),
+    @title: 'Material'
+    Material : String(50),
+    @title: 'Quantity'
+    OrderQuantity : Decimal(20),
+    @title: 'Item'
+    PurchaseOrderItem : String,
+    @title: 'Quantity Unit'
+    BaseUnit : String(20),
+    @title: 'Storage Location'
+    StorageLocation : String(50),
     *
 }
 
@@ -102,6 +114,21 @@ annotate satinfotech.Entry with @(
             Value: TransporterName_Name
         },
         {
+            Label: 'Transporter Phone Number',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: TransporterPh
+        },
+        {
+            Label: 'Driver Name',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: DriverName
+        },
+        {
+            Label: 'Driver Phone Number',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: Driverph
+        },
+        {
             Label: 'Note',
             ![@HTML5.CssDefaults]: {width:'5rem'},
             Value: Note
@@ -161,6 +188,18 @@ annotate satinfotech.Entry with @(
             {
                 $Type: 'UI.DataField',
                 Value: TransporterName_Name
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: TransporterPh
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: DriverName
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Driverph
             },
             {
                 $Type: 'UI.DataField',
@@ -349,32 +388,32 @@ annotate satinfotech.Entry.Purchase with @(
     UI.LineItem: [
         {
             Label: 'Purchase Order',
-            ![@HTML5.CssDefaults]: {width:'5rem'},
-            Value: ManufacturingOrder
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: PurchaseOrder
         },
         {
             Label: 'Item',
-            ![@HTML5.CssDefaults]: {width:'5rem'},
-            Value: ManufacturingOrderItem
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: PurchaseOrderItem
         },
         {
             Label: 'Material',
-            ![@HTML5.CssDefaults]: {width:'5rem'},
+            ![@HTML5.CssDefaults]: {width:'6rem'},
             Value: Material
         },
         {
-            Label: 'Quantity',
-            ![@HTML5.CssDefaults]: {width:'5rem'},
-            Value: TotalQuantity
+            Label: 'Base Unit',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: BaseUnit
         },
         {
-            Label: 'Quantity Unit',
-            ![@HTML5.CssDefaults]: {width:'5rem'},
-            Value: ProductionUnit
+            Label: 'Quantity',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: OrderQuantity
         },
         {
             Label: 'Storage Location',
-            ![@HTML5.CssDefaults]: {width:'5rem'},
+            ![@HTML5.CssDefaults]: {width:'9rem'},
             Value: StorageLocation
         },
     ],
@@ -385,11 +424,11 @@ annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
     Data : [
         {
                 $Type: 'UI.DataField',
-                Value: ManufacturingOrder
+                Value: PurchaseOrder
             },
             {
                 $Type: 'UI.DataField',
-                Value: ManufacturingOrderItem
+                Value: PurchaseOrderItem
             },
             {
                 $Type: 'UI.DataField',
@@ -397,11 +436,76 @@ annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
             },
             {
                 $Type: 'UI.DataField',
-                Value: TotalQuantity
+                Value: BaseUnit
             },
             {
                 $Type: 'UI.DataField',
-                Value: ProductionUnit
+                Value: OrderQuantity
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: StorageLocation
+            },
+    ]
+});
+
+annotate PurchaseOrders with @(
+    UI.LineItem: [
+        {
+            Label: 'Purchase Order',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: PurchaseOrder
+        },
+        {
+            Label: 'Item',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: PurchaseOrderItem
+        },
+        {
+            Label: 'Material',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: Material
+        },
+        {
+            Label: 'Quantity',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: BaseUnit
+        },
+        {
+            Label: 'Quantity Unit',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: OrderQuantity
+        },
+        {
+            Label: 'Storage Location',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: StorageLocation
+        },
+    ],
+);
+
+annotate PurchaseOrders with @(UI.FieldGroup #Information: {
+    $Type: 'UI.FieldGroupType',
+    Data : [
+        {
+                $Type: 'UI.DataField',
+                Value: PurchaseOrder
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PurchaseOrderItem
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Material
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: BaseUnit
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: OrderQuantity
             },
             {
                 $Type: 'UI.DataField',
@@ -421,6 +525,47 @@ annotate satinfotech.Entry with {
                     $Type            : 'Common.ValueListParameterInOut',
                     LocalDataProperty: TransporterName_Name,
                     ValueListProperty: 'Name'
+                }
+            ]
+        }
+    );
+};
+
+annotate satinfotech.Entry.Purchase with {
+    PurchaseOrder @(
+        Common.ValueList: {
+            Label: 'PurchaseOrder',
+            CollectionPath: 'PurchaseOrders',
+            Parameters: [
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'PurchaseOrder',
+                    ValueListProperty: 'PurchaseOrder'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'PurchaseOrderItem',  
+                    ValueListProperty: 'PurchaseOrderItem'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'Material',  
+                    ValueListProperty: 'Material'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'BaseUnit',  
+                    ValueListProperty: 'BaseUnit'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'OrderQuantity',  
+                    ValueListProperty: 'OrderQuantity'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'StorageLocation',  
+                    ValueListProperty: 'StorageLocation'
                 }
             ]
         }

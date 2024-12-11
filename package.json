@@ -10,7 +10,8 @@
     "@sap-cloud-sdk/http-client": "^3.24.0",
     "@sap-cloud-sdk/resilience": "^3.24.0",
     "@sap/cds": "^8",
-    "express": "^4"
+    "express": "^4",
+    "uuid": "^11.0.3"
   },
   "devDependencies": {
     "@cap-js/cds-types": "^0.6",
@@ -29,6 +30,10 @@
       "API_PRODUCTION_ORDER_2_SRV": {
         "kind": "odata-v2",
         "model": "srv/external/API_PRODUCTION_ORDER_2_SRV"
+      },
+      "CE_PURCHASEORDER_0001": {
+        "kind": "odata",
+        "model": "srv/external/CE_PURCHASEORDER_0001"
       }
     }
   }
