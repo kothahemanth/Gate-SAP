@@ -3,7 +3,9 @@ using {com.satinfotech.sat as db} from '../db/schema';
 
 service satinfotech {
 
-    entity Entry as projection on db.Entry;
+    entity Entry as projection on db.Entry actions {
+        action productData() returns String;
+    };
     entity Transporters as projection on db.Transporters;
     entity PurchaseOrders as projection on db.PurchaseOrders;
 
@@ -225,6 +227,12 @@ annotate satinfotech.Entry with @(
         ID    : 'PurchaseInfoFacet',
         Label : 'Purchase Information',
         Target: 'Purchase/@UI.LineItem',
+    },
+    {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'WeightInfoFacet',
+        Label : 'Weight Information',
+        Target: 'Weight/@UI.LineItem',
     }
     ]
 );
@@ -445,6 +453,125 @@ annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
             {
                 $Type: 'UI.DataField',
                 Value: StorageLocation
+            },
+    ]
+});
+
+annotate satinfotech.Entry.Weight with @(
+    UI.LineItem: [
+        {
+            Label: '1st Wt.',
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: FirstWt
+        },
+        {
+            Label: '2nd Wt.',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: SecondWt
+        },
+        {
+            Label: '3rd Wt.',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: ThirdWt
+        },
+        {
+            Label: 'Lx Avg Wt.',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: LxAvgWt
+        },
+        {
+            Label: 'Lx Net Wt.',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: LxNetWt
+        },
+        {
+            Label: 'Diff. Wt. (+/-)',
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: DiffWt
+        },
+        {
+            Label: 'Port Wt.',
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: PortWt
+        },
+        {
+            Label: 'Cont Wt.',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: ContWt
+        },
+        {
+            Label: 'Party Gross Wt.',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: PartyGrWt
+        },
+        {
+            Label: 'Party Net Wt',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: PartyNetWt
+        },
+        {
+            Label: 'Party Wt.',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: PartyWt
+        },
+        {
+            Label: 'Container No./Seal No.',
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: Conwt
+        },
+    ],
+);
+
+annotate satinfotech.Entry.Weight with @(UI.FieldGroup #Information: {
+    $Type: 'UI.FieldGroupType',
+    Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: FirstWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: SecondWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ThirdWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: LxAvgWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: LxNetWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: DiffWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PortWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ContWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PartyGrWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PartyNetWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PartyWt
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Conwt
             },
     ]
 });

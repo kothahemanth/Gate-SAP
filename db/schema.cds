@@ -34,7 +34,7 @@ entity Entry : cuid, managed {
     @title: 'Transporter Phone Number'
     TransporterPh : String(20);
     @title: 'Driver Name'
-    DriverName : Date;
+    DriverName : String(150);
     @title: 'Driver Phone Number'
     Driverph : String(20);
     @title: 'Note'
@@ -92,6 +92,35 @@ entity Entry : cuid, managed {
             OrderQuantity : Decimal;
             @title: 'Storage Location'
             StorageLocation : String(50);
+    };
+
+    Weight : Composition of many {
+        @UI.Hidden 
+        key ID:UUID;
+            @title: '1st Wt.'
+            FirstWt :String(10);
+            @title: '2nd Wt.'
+            SecondWt : Decimal(10, 2);
+            @title: '3rd Wt.'
+            ThirdWt : String(50);
+            @title: 'Lx Avg Wt.'
+            LxAvgWt : String;
+            @title: 'Lx Net Wt.'
+            LxNetWt : Decimal;
+            @title: 'Diff. Wt. (+/-)'
+            DiffWt : String(50);
+            @title: 'Port Wt.'
+            PortWt : String(50);
+            @title: 'Cont Wt.'
+            ContWt : String;
+            @title: 'Party Gross Wt.'
+            PartyGrWt : Decimal;
+            @title: 'Party Net Wt.'
+            PartyNetWt : String(50);
+            @title: 'Party Wt.'
+            PartyWt : Decimal;
+            @title: 'Container No./Seal No.'
+            Conwt : String(50);
     }
 }
 
