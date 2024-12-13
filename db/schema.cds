@@ -6,11 +6,11 @@ using { CE_PURCHASEORDER_0001 as external } from '../srv/external/CE_PURCHASEORD
 entity Entry : cuid, managed {
     key ID : UUID;
     @title: 'Serial Number'
-    SerialNo : Integer;
+    SerialNo : Decimal(10, 2);
     @title: 'Location Code'
-    LocationCode : String(10);
+    LocationCode : String(150);
     @title: 'Station From'
-    StationFrom : String(50);
+    StationFrom : String(150);
     @title: 'Description'
     Description : String(255);
     @title: 'Item Description'
@@ -22,29 +22,29 @@ entity Entry : cuid, managed {
     @title: 'Posting Date'
     PostingDate : Date;
     @title: 'L.R. No'
-    LRNo : String(20);
+    LRNo : String(150);
     @title: 'L.R. No Date'
     LRNoDate : Date;
     @title: 'Vehicle No'
-    VehicleNo : String(20);
+    VehicleNo : String(150);
     @title: 'Transporter'
     Transporter : String(100);
     @title: 'Transporter Name'
     TransporterName : Association to Transporters;
     @title: 'Transporter Phone Number'
-    TransporterPh : String(20);
+    TransporterPh : String(150);
     @title: 'Driver Name'
     DriverName : String(150);
     @title: 'Driver Phone Number'
-    Driverph : String(20);
+    Driverph : String(150);
     @title: 'Note'
-    Note : String(500);
+    Note : String(150);
 
     Details : Composition of many {
     @UI.Hidden 
     key ID:UUID;
         @title: 'Store Level'
-        StoreLevel : String(50);
+        StoreLevel : String(150);
         @title: 'Average Weight'
         @readonly AverageWeight : Decimal(10, 2);
         @title: 'Container Weight'
@@ -66,59 +66,70 @@ entity Entry : cuid, managed {
         @title: 'Bag Weight (LX)'
         BagWeightLX : Decimal(10, 2);
         @title: 'Type of Scrap'
-        TypeOfScrap : String(50);
+        TypeOfScrap : String(150);
         @title: 'Unloading By'
-        UnloadingBy : String(50);
+        UnloadingBy : String(150);
         @title: 'Challan No'
-        ChallanNo : String(20);
+        ChallanNo : String(120);
         @title: 'Source No'
-        SourceNo : String(50);
+        SourceNo : String(150);
         @title: 'Source Type'
-        SourceType : String(50);
+        SourceType : String(150);
     };
 
     Purchase : Composition of many {
         @UI.Hidden 
         key ID:UUID;
             @title: 'Purchase Order'
-            PurchaseOrder :String(10);
+            PurchaseOrder :String(150);
             @title: 'Item'
             PurchaseOrderItem : Decimal(10, 2);
             @title: 'Material'
-            Material : String(50);
+            Material : String(150);
+            @title: 'Plant'
+            Plant : String(150);
             @title: 'Base Unit'
-            BaseUnit : String;
+            BaseUnit : String(150);
             @title: 'Quantity'
-            OrderQuantity : Decimal;
+            OrderQuantity : Decimal(10, 2);
             @title: 'Storage Location'
-            StorageLocation : String(50);
+            StorageLocation : String(150);
+            @title: 'Company Code'
+            CompanyCode : String(150);
+            @title: 'Tax Code'
+            TaxCode : String(150);
+            @title: 'HSN Code'
+            ConsumptionTaxCtrlCode : String(150);
+            @title: 'UOP'
+            OrderPriceUnit : String(150);
+
     };
 
     Weight : Composition of many {
         @UI.Hidden 
         key ID:UUID;
             @title: '1st Wt.'
-            FirstWt :String(10);
+            FirstWt :Decimal(10, 2);
             @title: '2nd Wt.'
             SecondWt : Decimal(10, 2);
             @title: '3rd Wt.'
-            ThirdWt : String(50);
+            ThirdWt : Decimal(10, 2);
             @title: 'Lx Avg Wt.'
-            LxAvgWt : String;
+            LxAvgWt : Decimal(10, 2);
             @title: 'Lx Net Wt.'
-            LxNetWt : Decimal;
+            LxNetWt : Decimal(10, 2);
             @title: 'Diff. Wt. (+/-)'
-            DiffWt : String(50);
+            DiffWt : Decimal(10, 2);
             @title: 'Port Wt.'
-            PortWt : String(50);
+            PortWt : Decimal(10, 2);
             @title: 'Cont Wt.'
-            ContWt : String;
+            ContWt : Decimal(10, 2);
             @title: 'Party Gross Wt.'
-            PartyGrWt : Decimal;
+            PartyGrWt : Decimal(10, 2);
             @title: 'Party Net Wt.'
-            PartyNetWt : String(50);
+            PartyNetWt :Decimal(10, 2);
             @title: 'Party Wt.'
-            PartyWt : Decimal;
+            PartyWt : Decimal(10, 2);
             @title: 'Container No./Seal No.'
             Conwt : String(50);
     }

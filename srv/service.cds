@@ -16,6 +16,8 @@ entity PurchaseOrders as projection on db.PurchaseOrders{
     PurchaseOrder : Decimal(10, 2),
     @title: 'Material'
     Material : String(50),
+    @title: 'Plant'
+    Plant : String(50),
     @title: 'Quantity'
     OrderQuantity : Decimal(20),
     @title: 'Item'
@@ -24,6 +26,14 @@ entity PurchaseOrders as projection on db.PurchaseOrders{
     BaseUnit : String(20),
     @title: 'Storage Location'
     StorageLocation : String(50),
+    @title: 'Tax Code'
+    TaxCode : String(50),
+    @title: 'Company Code'
+    CompanyCode : String(50),
+    @title: 'HSN Code'
+    ConsumptionTaxCtrlCode : String(50),
+    @title: 'UOP'
+    OrderPriceUnit : String(50),
     *
 }
 
@@ -410,6 +420,12 @@ annotate satinfotech.Entry.Purchase with @(
             Value: Material
         },
         {
+            ![@UI.Hidden],
+            Label: 'Plant',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: Plant
+        },
+        {
             Label: 'Base Unit',
             ![@HTML5.CssDefaults]: {width:'6rem'},
             Value: BaseUnit
@@ -423,6 +439,30 @@ annotate satinfotech.Entry.Purchase with @(
             Label: 'Storage Location',
             ![@HTML5.CssDefaults]: {width:'9rem'},
             Value: StorageLocation
+        },
+        {
+            ![@UI.Hidden],
+            Label: 'Company Code',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: CompanyCode
+        },
+        {
+            ![@UI.Hidden],
+            Label: 'Tax Code',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: TaxCode
+        },
+        {
+            ![@UI.Hidden],
+            Label: 'HSN Code',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: ConsumptionTaxCtrlCode
+        },
+        {
+            ![@UI.Hidden],
+            Label: 'UOP',
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: OrderPriceUnit
         },
     ],
 );
@@ -444,6 +484,10 @@ annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
             },
             {
                 $Type: 'UI.DataField',
+                Value: Plant
+            },
+            {
+                $Type: 'UI.DataField',
                 Value: BaseUnit
             },
             {
@@ -453,6 +497,22 @@ annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
             {
                 $Type: 'UI.DataField',
                 Value: StorageLocation
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: CompanyCode
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: TaxCode
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ConsumptionTaxCtrlCode
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: OrderPriceUnit
             },
     ]
 });
@@ -676,6 +736,11 @@ annotate satinfotech.Entry.Purchase with {
                 },
                 {
                     $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'Plant',  
+                    ValueListProperty: 'Plant'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
                     LocalDataProperty: 'Material',  
                     ValueListProperty: 'Material'
                 },
@@ -693,6 +758,26 @@ annotate satinfotech.Entry.Purchase with {
                     $Type: 'Common.ValueListParameterInOut',
                     LocalDataProperty: 'StorageLocation',  
                     ValueListProperty: 'StorageLocation'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'TaxCode',  
+                    ValueListProperty: 'TaxCode'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'CompanyCode',  
+                    ValueListProperty: 'CompanyCode'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'ConsumptionTaxCtrlCode',  
+                    ValueListProperty: 'ConsumptionTaxCtrlCode'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'OrderPriceUnit',  
+                    ValueListProperty: 'OrderPriceUnit'
                 }
             ]
         }

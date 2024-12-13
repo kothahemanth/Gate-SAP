@@ -7,7 +7,7 @@ module.exports = cds.service.impl(async function () {
     const { Transporters, PurchaseOrders, Entry } = this.entities;
 
     this.before(['CREATE', 'UPDATE'], 'Entry', async (req) => {
-        const { Details, TransporterName_Name, Purchase } = req.data;
+        const { Details, TransporterName_Name, Purchase, Weight } = req.data;
 
         if (Details && Array.isArray(Details)) {
             Details.forEach((detail) => {
@@ -33,6 +33,7 @@ module.exports = cds.service.impl(async function () {
                 detail.AverageWeight = averageWeight;
             });
         }
+
         if (TransporterName_Name) {
             const existingTransporter = await SELECT.one.from(Transporters).where({ Name: TransporterName_Name });
 
@@ -50,19 +51,29 @@ module.exports = cds.service.impl(async function () {
                             .from('satinfotech.PurchaseOrders')
                             .columns(
                                 'Material',
+                                'Plant',
                                 'PurchaseOrderItem',
                                 'OrderQuantity',
                                 'BaseUnit',
-                                'StorageLocation'
+                                'StorageLocation',
+                                'TaxCode',
+                                'CompanyCode',
+                                'ConsumptionTaxCtrlCode',
+                                'OrderPriceUnit'
                             )
                             .where({ PurchaseOrder: PurchaseOrder });
         
                         if (purchaseOrderDetails) {
                             purchase.Material = purchaseOrderDetails.Material;
+                            purchase.Plant = purchaseOrderDetails.Plant;
                             purchase.PurchaseOrderItem = purchaseOrderDetails.PurchaseOrderItem;
                             purchase.OrderQuantity = purchaseOrderDetails.OrderQuantity;
                             purchase.BaseUnit = purchaseOrderDetails.BaseUnit;
                             purchase.StorageLocation = purchaseOrderDetails.StorageLocation;
+                            purchase.TaxCode = purchaseOrderDetails.TaxCode;
+                            purchase.CompanyCode = purchaseOrderDetails.CompanyCode;
+                            purchase.ConsumptionTaxCtrlCode = purchaseOrderDetails.ConsumptionTaxCtrlCode;
+                            purchase.OrderPriceUnit = purchaseOrderDetails.OrderPriceUnit;
                         } else {
                             req.error(400, `No details found for Manufacturing Order ${Order}`);
                         }
@@ -72,16 +83,39 @@ module.exports = cds.service.impl(async function () {
                 }
             }
         }
+
+        if (Weight && Array.isArray(Weight)) {
+            Weight.forEach((weight) => {
+                const { FirstWt, SecondWt, ThirdWt } = weight;
+
+                if (FirstWt == null || SecondWt == null || ThirdWt == null) {
+                    req.error(400, 'FirstWt, SecondWt and ThirdWt are required in Weight.');
+                }
+
+                if (typeof FirstWt !== 'number' || typeof SecondWt !== 'number' || typeof ThirdWt !== 'number') {
+                    req.error(400, 'FirstWt, SecondWt and ThirdWt must be numeric in Details.');
+                }
+                const Wght = FirstWt + SecondWt + ThirdWt;
+                const AvgWght = Wght / 3;
+
+                weight.LxAvgWt = AvgWght;
+            });
+        }
     });
 
     this.on("READ", "PurchaseOrders", async (req) => {
         req.query.SELECT.columns = [
             { ref: ["PurchaseOrder"] },
             { ref: ["PurchaseOrderItem"] },
+            { ref: ["Plant"]},
             { ref: ["Material"] },
             { ref: ["BaseUnit"] },
             { ref: ["OrderQuantity"] },
             { ref: ["StorageLocation"] },
+            { ref: ["CompanyCode"] },
+            { ref: ["TaxCode"] },
+            { ref: ["ConsumptionTaxCtrlCode"]},
+            { ref: ["OrderPriceUnit"]},
         ];
         try {
             return await PurchaseOrderAPI.run(req.query);
@@ -95,7 +129,6 @@ module.exports = cds.service.impl(async function () {
         console.log(req.params);
         const { ID } = req.params[0];  
     
-        // Fetch the Entry with associated compositions
         const rowData = await SELECT.one.from(Entry)
         .columns(
         '*', 
@@ -110,8 +143,7 @@ module.exports = cds.service.impl(async function () {
         }
     
         console.log("Row data:", rowData);
-    
-        // Function to generate XML
+
         const xmlfun = (rowData) => {
             const xmlData = json2xml({ Entry: rowData }, { header: true });
             return xmlData;
@@ -125,7 +157,6 @@ module.exports = cds.service.impl(async function () {
         console.log("Base64 Encoded XML:", base64EncodedXML);
     
         try {
-            // Fetch OAuth token
             const authResponse = await axios.get('https://chembonddev.authentication.us10.hana.ondemand.com/oauth/token', {
                 params: {
                     grant_type: 'client_credentials'
