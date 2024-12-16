@@ -8,6 +8,21 @@ service satinfotech {
     };
     entity Transporters as projection on db.Transporters;
     entity PurchaseOrders as projection on db.PurchaseOrders;
+entity PurchasePricing as projection on db.PurchasePricing{
+  key  PurchaseOrder,
+   key  PurchaseOrderItem,
+    ConditionType,
+    ConditionAmount,
+    ConditionQuantity,
+
+}
+}
+entity PurchasePricing as projection on db.PurchasePricing{
+  key  PurchaseOrder,
+   key  PurchaseOrderItem,
+    ConditionType,
+    ConditionAmount,
+    ConditionQuantity,
 
 }
 

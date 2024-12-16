@@ -4,7 +4,7 @@ const axios = require('axios');
 
 module.exports = cds.service.impl(async function () {
     const PurchaseOrderAPI = await cds.connect.to("CE_PURCHASEORDER_0001");
-    const { Transporters, PurchaseOrders, Entry } = this.entities;
+    const { Transporters, PurchaseOrders, Entry,PurchasePricing } = this.entities;
 
     this.before(['CREATE', 'UPDATE'], 'Entry', async (req) => {
         const { Details, TransporterName_Name, Purchase, Weight } = req.data;
@@ -102,6 +102,9 @@ module.exports = cds.service.impl(async function () {
             });
         }
     });
+    this.on("READ", "PurchasePricing", async (req) => {
+       return  await PurchaseOrderAPI.run(req.query);
+    });
 
     this.on("READ", "PurchaseOrders", async (req) => {
         req.query.SELECT.columns = [
@@ -124,35 +127,131 @@ module.exports = cds.service.impl(async function () {
             req.error(500, "Failed to fetch data from PurchaseOrders API");
         }
     });
-
     this.on('productData', 'Entry', async (req) => {
         console.log(req.params);
         const { ID } = req.params[0];  
     
+        // Fetch the main row data including Purchase details
         const rowData = await SELECT.one.from(Entry)
-        .columns(
-        '*', 
-        {ref:['Details'],expand:['*']},
-        {ref:['Purchase'],expand:['*']},
-        {ref:['Weight'],expand:['*']}
-    )
-    .where({ ID });
+            .columns(
+                '*', 
+                { ref: ['Details'], expand: ['*'] },
+                { ref: ['Purchase'], expand: ['*'] },
+                { ref: ['Weight'], expand: ['*'] }
+            )
+            .where({ ID });
     
         if (!rowData) {
             return req.error(404, `No data found for ID: ${ID}`);
         }
     
-        console.log("Row data:", rowData);
-
-        const xmlfun = (rowData) => {
-            const xmlData = json2xml({ Entry: rowData }, { header: true });
-            return xmlData;
+        console.log("Row data before PurchasePricing:", rowData);
+        
+        const fetchPricingElements = async () => {
+          
+            const extractedData = rowData.Purchase.map(purchase => ({
+                PurchaseOrder: purchase.PurchaseOrder,
+                PurchaseOrderItem: purchase.PurchaseOrderItem
+            }));
+            const pricingPromises = extractedData.map(async (purchase) => {
+                const { PurchaseOrder, PurchaseOrderItem } = purchase;
+                console.log('Fetching pricing for:', PurchaseOrder, PurchaseOrderItem);
+                
+                const purchasePricingData = await PurchaseOrderAPI.run(
+                    SELECT.from('PurOrderItemPricingElement')
+                        .where({
+                            PurchaseOrder: String(PurchaseOrder),  
+                            PurchaseOrderItem: String(PurchaseOrderItem)  
+                        })
+                        .columns('ConditionType', 'ConditionQuantity', 'ConditionAmount')
+                );
+                
+                console.log('Filtered Pricing Elements for', PurchaseOrder, PurchaseOrderItem, purchasePricingData);
+                
+                // Map the pricing data to an array of objects where each object represents a pricing element
+                const pricingElements = purchasePricingData.map(pricing => ({
+                    ConditionType: pricing.ConditionType,
+                    ConditionQuantity: pricing.ConditionQuantity,
+                    ConditionAmount: pricing.ConditionAmount
+                }));
+                
+                return { PurchaseOrder, PurchaseOrderItem, pricingElements };
+            });
+            
+            const pricingData = await Promise.all(pricingPromises);
+            console.log('pricingData',pricingData)
+            // const pricingPromises = extractedData.map(async (purchase) => {
+            //     const { PurchaseOrder, PurchaseOrderItem } = purchase;
+            //     console.log('Fetching pricing for:', PurchaseOrder, PurchaseOrderItem);
+                
+            //     const purchasePricingData = await PurchaseOrderAPI.run(
+            //         SELECT.from('PurOrderItemPricingElement')
+            //             .where({
+            //                 PurchaseOrder: String(PurchaseOrder),  
+            //                 PurchaseOrderItem: String(PurchaseOrderItem)  
+            //             })
+            //             .columns('ConditionType', 'ConditionQuantity','ConditionAmount')
+            //     );
+                
+            //     console.log('Filtered Pricing Elements for', PurchaseOrder, PurchaseOrderItem, purchasePricingData);
+                
+            //     return { PurchaseOrder, PurchaseOrderItem, pricingElements: purchasePricingData };
+            // });
+    
+         
+            // const pricingData = await Promise.all(pricingPromises);
+            
+           
+            rowData.Purchase.forEach((purchase) => {
+                const pricingInfo = pricingData.find(p => p.PurchaseOrder === purchase.PurchaseOrder && p.PurchaseOrderItem === purchase.PurchaseOrderItem);
+                if (pricingInfo) {
+                    purchase.PricingElements = pricingInfo.pricingElements;
+                }
+            });
+            
+            console.log("Row data after attaching pricing:", rowData);
+            rowData.Purchase.forEach((purchase, index) => {
+                console.log(`Purchase ${index + 1}:`);
+                console.log('Pricing Elements:', purchase.PricingElements);  // Print Pricing Elements for each purchase
+            });
+        
+            
+            return rowData;  // Return the row data with the attached pricing
         };
-    
-        const callxml = xmlfun(rowData);
-    
-        console.log("Generated XML:", callxml);
-        const base64EncodedXML = Buffer.from(callxml).toString('base64');
+        
+        // Call the function to fetch and attach pricing data
+        try {
+            const updatedRowData = await fetchPricingElements();
+            
+            const xmlfun = (rowData) => {
+                // Convert row data to XML format, including PricingElement tags
+                const json2xmlOptions = { header: true, prettyPrint: true };
+                
+                // Iterate through purchases and pricing elements to create the desired XML structure
+                const rowDataWithPricingElements = {
+                    Entry: {
+                        ...rowData,  // Include the rest of the rowData
+                        Purchase: rowData.Purchase.map(purchase => ({
+                            ...purchase,
+                            PricingElements: purchase.PricingElements ? purchase.PricingElements.map(pricing => ({
+                                PricingElement: {
+                                    ConditionType: pricing.ConditionType,
+                                    ConditionQuantity: pricing.ConditionQuantity,
+                                    ConditionAmount:pricing.ConditionAmount,
+
+                                }
+                            })) : []
+                        }))
+                    }
+                };
+                
+                const xmlData = json2xml(rowDataWithPricingElements, json2xmlOptions);
+                return xmlData;
+            };
+            
+            const xmlOutput = xmlfun(updatedRowData);
+            console.log("Generated XML:", xmlOutput);
+            const base64EncodedXML = Buffer.from(xmlOutput).toString('base64');
     
         console.log("Base64 Encoded XML:", base64EncodedXML);
     
@@ -194,6 +293,14 @@ module.exports = cds.service.impl(async function () {
             console.error("Error occurred:", error);
             return req.error(500, "An error occurred while processing your request.");
         }
+            
+            // You can send the XML data as the response or use it further
+            //return xmlOutput;
+        } catch (error) {
+            console.error('Error fetching or processing pricing data:', error);
+            return req.error(500, 'Error fetching or processing pricing data');
+        }
+        
         
     });
     

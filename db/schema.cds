@@ -102,7 +102,7 @@ entity Entry : cuid, managed {
             ConsumptionTaxCtrlCode : String(150);
             @title: 'UOP'
             OrderPriceUnit : String(150);
-
+            
     };
 
     Weight : Composition of many {
@@ -134,8 +134,11 @@ entity Entry : cuid, managed {
             Conwt : String(50);
     }
 }
-
 entity PurchaseOrders as projection on external.PurchaseOrderItem {
+            *
+};
+
+entity PurchasePricing as projection on external.PurOrderItemPricingElement {
             *
 };
 
