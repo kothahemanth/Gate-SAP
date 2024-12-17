@@ -16,10 +16,11 @@ entity PurchasePricing as projection on db.PurchasePricing{
     ConditionQuantity,
 
 }
+
 }
 entity PurchasePricing as projection on db.PurchasePricing{
-  key  PurchaseOrder,
-   key  PurchaseOrderItem,
+    key PurchaseOrder,
+    key PurchaseOrderItem,
     ConditionType,
     ConditionAmount,
     ConditionQuantity,

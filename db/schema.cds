@@ -115,7 +115,7 @@ entity Entry : cuid, managed {
             @title: '3rd Wt.'
             ThirdWt : Decimal(10, 2);
             @title: 'Lx Avg Wt.'
-            LxAvgWt : Decimal(10, 2);
+            @readonly LxAvgWt : Decimal(10, 2);
             @title: 'Lx Net Wt.'
             LxNetWt : Decimal(10, 2);
             @title: 'Diff. Wt. (+/-)'
