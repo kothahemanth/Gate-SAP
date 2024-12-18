@@ -54,6 +54,7 @@ module.exports = cds.service.impl(async function () {
                                 'Material',
                                 'Plant',
                                 'PurchaseOrderItem',
+                                'PurchaseOrderItemText',
                                 'OrderQuantity',
                                 'BaseUnit',
                                 'StorageLocation',
@@ -68,6 +69,7 @@ module.exports = cds.service.impl(async function () {
                             purchase.Material = purchaseOrderDetails.Material;
                             purchase.Plant = purchaseOrderDetails.Plant;
                             purchase.PurchaseOrderItem = purchaseOrderDetails.PurchaseOrderItem;
+                            purchase.PurchaseOrderItemText = purchaseOrderDetails.PurchaseOrderItemText;
                             purchase.OrderQuantity = purchaseOrderDetails.OrderQuantity;
                             purchase.BaseUnit = purchaseOrderDetails.BaseUnit;
                             purchase.StorageLocation = purchaseOrderDetails.StorageLocation;
@@ -129,6 +131,7 @@ module.exports = cds.service.impl(async function () {
         req.query.SELECT.columns = [
             { ref: ["PurchaseOrder"] },
             { ref: ["PurchaseOrderItem"] },
+            { ref: ["PurchaseOrderItemText"] },
             { ref: ["Plant"] },
             { ref: ["Material"] },
             { ref: ["BaseUnit"] },

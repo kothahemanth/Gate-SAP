@@ -84,6 +84,8 @@ entity Entry : cuid, managed {
             PurchaseOrder :String(150);
             @title: 'Item'
             PurchaseOrderItem : Decimal(10, 2);
+            @title: 'Purchase Order Item Text'
+            PurchaseOrderItemText : String(150);
             @title: 'Material'
             Material : String(150);
             @title: 'Plant'

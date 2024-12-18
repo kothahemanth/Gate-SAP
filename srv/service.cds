@@ -38,6 +38,8 @@ entity PurchaseOrders as projection on db.PurchaseOrders{
     OrderQuantity : Decimal(20),
     @title: 'Item'
     PurchaseOrderItem : String,
+    @title: 'Purchase Order Item Text'
+    PurchaseOrderItemText : String(150),
     @title: 'Quantity Unit'
     BaseUnit : String(20),
     @title: 'Storage Location'
@@ -426,10 +428,16 @@ annotate satinfotech.Entry.Purchase with @(
             Value: PurchaseOrder
         },
         {
-            Label: 'Item',
+            Label: 'P.O Item',
             ![@HTML5.CssDefaults]: {width:'6rem'},
             Value: PurchaseOrderItem
         },
+        {   
+            ![@UI.Hidden],
+            Label: 'P.O Item Text',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: PurchaseOrderItemText
+        },   
         {
             Label: 'Material',
             ![@HTML5.CssDefaults]: {width:'6rem'},
@@ -493,6 +501,10 @@ annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
             {
                 $Type: 'UI.DataField',
                 Value: PurchaseOrderItem
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: PurchaseOrderItemText
             },
             {
                 $Type: 'UI.DataField',
@@ -749,6 +761,11 @@ annotate satinfotech.Entry.Purchase with {
                     $Type: 'Common.ValueListParameterInOut',
                     LocalDataProperty: 'PurchaseOrderItem',  
                     ValueListProperty: 'PurchaseOrderItem'
+                },
+                {
+                    $Type: 'Common.ValueListParameterInOut',
+                    LocalDataProperty: 'PurchaseOrderItemText',  
+                    ValueListProperty: 'PurchaseOrderItemText'
                 },
                 {
                     $Type: 'Common.ValueListParameterInOut',
