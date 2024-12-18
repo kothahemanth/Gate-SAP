@@ -178,7 +178,6 @@ module.exports = cds.service.impl(async function () {
             const pricingPromises = extractedData.map(async (purchase) => {
                 const { PurchaseOrder, PurchaseOrderItem } = purchase;
     
-                // Fetch pricing elements
                 const purchasePricingData = await PurchaseOrderAPI.run(
                     SELECT.from('PurOrderItemPricingElement')
                         .columns('ConditionType', 'ConditionQuantity', 'ConditionAmount')
@@ -190,7 +189,6 @@ module.exports = cds.service.impl(async function () {
     
                 console.log('Pricing Elements:', purchasePricingData);
     
-                // Fetch supplier address details
                 const supplierAddressData = await PurchaseOrderAPI.run(
                     SELECT.from('PurchaseOrder')
                         .columns(
@@ -234,7 +232,6 @@ module.exports = cds.service.impl(async function () {
     
             const pricingData = await Promise.all(pricingPromises);
     
-            // Attach pricing and supplier details to rowData
             rowData.Purchase.forEach((purchase) => {
                 const pricingInfo = pricingData.find(p =>
                     p.PurchaseOrder === purchase.PurchaseOrder &&
@@ -242,7 +239,7 @@ module.exports = cds.service.impl(async function () {
                 );
                 if (pricingInfo) {
                     purchase.PricingElements = pricingInfo.pricingElements;
-                    purchase.SupplierAddress = pricingInfo.supplierAddress; // Attach supplierAddress here
+                    purchase.SupplierAddress = pricingInfo.supplierAddress; 
                 }
             });
     
@@ -305,7 +302,7 @@ module.exports = cds.service.impl(async function () {
                 const pdfResponse = await axios.post(
                     'https://adsrestapi-formsprocessing.cfapps.us10.hana.ondemand.com/v1/adsRender/pdf?templateSource=storageName',
                     {
-                        xdpTemplate: "hemanth/Default",
+                        xdpTemplate: "Test/Default",
                         xmlData: base64EncodedXML,
                         formType: "print",
                         formLocale: "",
