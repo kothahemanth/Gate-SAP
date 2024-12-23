@@ -7,6 +7,7 @@ service satinfotech {
         action productData() returns String;
     };
     entity Transporters as projection on db.Transporters;
+    entity FreightInfo as projection on db.FreightInfo;
     entity PurchaseOrders as projection on db.PurchaseOrders;
 entity PurchasePricing as projection on db.PurchasePricing{
   key  PurchaseOrder,
@@ -24,7 +25,7 @@ entity PurchasePricing as projection on db.PurchasePricing{
     ConditionType,
     ConditionAmount,
     ConditionQuantity,
-
+    ConditionRateRatio
 }
 
 entity PurchaseOrders as projection on db.PurchaseOrders{
@@ -57,6 +58,7 @@ entity PurchaseOrders as projection on db.PurchaseOrders{
 
 annotate satinfotech.Entry with @odata.draft.enabled;
 annotate satinfotech.Transporters with @odata.draft.enabled;
+annotate satinfotech.FreightInfo with @odata.draft.enabled;
 
 annotate satinfotech.Transporters with @(UI.LineItem: [
     {
@@ -73,6 +75,23 @@ UI.FieldGroup #TransportDetails: {
             },
         ]
     }
+);
+
+annotate satinfotech.FreightInfo with @(UI.LineItem: [
+    {
+        $Type: 'UI.DataField',
+        Value: Desc
+    },
+],
+UI.FieldGroup #FreightInfoDetails: {
+        $Type: 'UI.FieldGroupType',
+        Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: Desc
+            },
+        ]
+    }
 
 );
 
@@ -82,6 +101,31 @@ annotate satinfotech.Entry with @(
             Label: 'Serial Number',
             ![@HTML5.CssDefaults]: {width:'5rem'},
             Value: SerialNo
+        },
+        {
+            Label: 'GRN No.',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: GRN_No
+        },
+        {
+            Label: 'GRN Date',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: GRN_Date
+        },
+        {
+            Label: 'Order No.',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: Order_no
+        },
+        {
+            Label: 'Order Date',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: Order_date
+        },
+        {
+            Label: 'Purchaser',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: Purchaser_name
         },
         {
             Label: 'Location Code',
@@ -163,6 +207,11 @@ annotate satinfotech.Entry with @(
             ![@HTML5.CssDefaults]: {width:'5rem'},
             Value: Note
         },
+        {
+            Label: 'Freight',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: Freight_Desc
+        },
     ],
     UI.FieldGroup #GateEntryDetails: {
         $Type: 'UI.FieldGroupType',
@@ -170,6 +219,26 @@ annotate satinfotech.Entry with @(
             {
                 $Type: 'UI.DataField',
                 Value: SerialNo
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: GRN_No
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: GRN_Date
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Order_no
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Order_date
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Purchaser_name
             },
             {
                 $Type: 'UI.DataField',
@@ -235,6 +304,10 @@ annotate satinfotech.Entry with @(
                 $Type: 'UI.DataField',
                 Value: Note
             },
+            {
+                $Type: 'UI.DataField',
+                Value: Freight_Desc
+            },
         ]
     },
 
@@ -261,6 +334,12 @@ annotate satinfotech.Entry with @(
         ID    : 'WeightInfoFacet',
         Label : 'Weight Information',
         Target: 'Weight/@UI.LineItem',
+    },
+    {
+        $Type : 'UI.ReferenceFacet',
+        ID    : 'RemarksInfoFacet',
+        Label : 'Remarks Information',
+        Target: 'Remarks/@UI.LineItem',
     }
     ]
 );
@@ -338,6 +417,11 @@ annotate satinfotech.Entry.Details with @(
             Value: ChallanNo
         },
         {
+            Label: 'Challan Date',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: ChallanDate
+        },
+        {
             Label: 'Source No',
             ![@HTML5.CssDefaults]: {width:'5rem'},
             Value: SourceNo
@@ -408,6 +492,10 @@ annotate satinfotech.Entry.Details with @(UI.FieldGroup #WeightInformation: {
             {
                 $Type: 'UI.DataField',
                 Value: ChallanNo
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: ChallanDate
             },
             {
                 $Type: 'UI.DataField',
@@ -488,6 +576,16 @@ annotate satinfotech.Entry.Purchase with @(
             ![@HTML5.CssDefaults]: {width:'9rem'},
             Value: OrderPriceUnit
         },
+        {
+            Label: 'Department',
+            ![@HTML5.CssDefaults]: {width:'6rem'},
+            Value: Departmen
+        },
+        {
+            Label: 'Indent No.',
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: indentNo
+        },
     ],
 );
 
@@ -541,6 +639,14 @@ annotate satinfotech.Entry.Purchase with @(UI.FieldGroup #Information: {
             {
                 $Type: 'UI.DataField',
                 Value: OrderPriceUnit
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: Departmen
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: indentNo
             },
     ]
 });
@@ -664,6 +770,26 @@ annotate satinfotech.Entry.Weight with @(UI.FieldGroup #Information: {
     ]
 });
 
+annotate satinfotech.Entry.Remarks with @(
+    UI.LineItem: [
+        {
+            Label: 'Remarks',
+            ![@HTML5.CssDefaults]: {width:'9rem'},
+            Value: remark
+        }
+    ],
+);
+
+annotate satinfotech.Entry.Remarks with @(UI.FieldGroup #RemarksInformation: {
+    $Type: 'UI.FieldGroupType',
+    Data : [
+            {
+                $Type: 'UI.DataField',
+                Value: remark
+            },
+    ]
+});
+
 annotate PurchaseOrders with @(
     UI.LineItem: [
         {
@@ -740,6 +866,23 @@ annotate satinfotech.Entry with {
                     $Type            : 'Common.ValueListParameterInOut',
                     LocalDataProperty: TransporterName_Name,
                     ValueListProperty: 'Name'
+                }
+            ]
+        }
+    );
+};
+
+annotate satinfotech.Entry with {
+    Freight @(
+        // Common.ValueListWithFixedValues: true,
+        Common.ValueList               : {
+            Label         : 'FreightInfo',
+            CollectionPath: 'FreightInfo',
+            Parameters    : [
+                {
+                    $Type            : 'Common.ValueListParameterInOut',
+                    LocalDataProperty: Freight_Desc,
+                    ValueListProperty: 'Desc'
                 }
             ]
         }

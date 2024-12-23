@@ -6,7 +6,17 @@ using { CE_PURCHASEORDER_0001 as external } from '../srv/external/CE_PURCHASEORD
 entity Entry : cuid, managed {
     key ID : UUID;
     @title: 'Serial Number'
-    SerialNo : Decimal(10, 2);
+    SerialNo : String(150);
+    @title : 'GRN NO.'
+    GRN_No : String(150);
+    @title : 'GRN Date'
+    GRN_Date : Date;
+    @title: 'Order No'
+    Order_no : String(150);
+    @title: 'Order Date'
+    Order_date : Date;
+    @title: 'Purchaser'
+    Purchaser_name : String(150);
     @title: 'Location Code'
     LocationCode : String(150);
     @title: 'Station From'
@@ -39,6 +49,8 @@ entity Entry : cuid, managed {
     Driverph : String(150);
     @title: 'Note'
     Note : String(150);
+    @title: 'Freight'
+    Freight : Association to FreightInfo;
 
     Details : Composition of many {
     @UI.Hidden 
@@ -71,6 +83,8 @@ entity Entry : cuid, managed {
         UnloadingBy : String(150);
         @title: 'Challan No'
         ChallanNo : String(120);
+        @title: 'Challan No'
+        ChallanDate : Date;
         @title: 'Source No'
         SourceNo : String(150);
         @title: 'Source Type'
@@ -83,27 +97,31 @@ entity Entry : cuid, managed {
             @title: 'Purchase Order'
             PurchaseOrder :String(150);
             @title: 'Item'
-            PurchaseOrderItem : Decimal(10, 2);
+            @readonly PurchaseOrderItem : Decimal(10, 2);
             @title: 'Purchase Order Item Text'
-            PurchaseOrderItemText : String(150);
+            @readonly PurchaseOrderItemText : String(150);
             @title: 'Material'
-            Material : String(150);
+            @readonly Material : String(150);
             @title: 'Plant'
-            Plant : String(150);
+            @readonly Plant : String(150);
             @title: 'Base Unit'
-            BaseUnit : String(150);
+            @readonly BaseUnit : String(150);
             @title: 'Quantity'
-            OrderQuantity : Decimal(10, 2);
+            @readonly OrderQuantity : Decimal(10, 2);
             @title: 'Storage Location'
-            StorageLocation : String(150);
+            @readonly StorageLocation : String(150);
             @title: 'Company Code'
-            CompanyCode : String(150);
+            @readonly CompanyCode : String(150);
             @title: 'Tax Code'
-            TaxCode : String(150);
+            @readonly TaxCode : String(150);
             @title: 'HSN Code'
-            ConsumptionTaxCtrlCode : String(150);
+            @readonly ConsumptionTaxCtrlCode : String(150);
             @title: 'UOP'
-            OrderPriceUnit : String(150);
+            @readonly OrderPriceUnit : String(150);
+            @title: 'Department'
+            Departmen : String(150);
+            @title: 'Indent No.'
+            indentNo : String(150);
             
     };
 
@@ -135,6 +153,13 @@ entity Entry : cuid, managed {
             @title: 'Container No./Seal No.'
             Conwt : String(50);
     }
+
+    Remarks : Composition of many {
+        @UI.Hidden 
+        key ID:UUID;
+            @title: 'Remarks'
+            remark :String(300); 
+    }
 }
 entity PurchaseOrders as projection on external.PurchaseOrderItem {
             *
@@ -147,4 +172,9 @@ entity PurchasePricing as projection on external.PurOrderItemPricingElement {
 entity Transporters {
     @title: 'Name'
     key Name : String(100);
+}
+
+entity FreightInfo {
+    @title: 'Info'
+    key Desc : String(100);
 }

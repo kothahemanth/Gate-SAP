@@ -4,10 +4,10 @@ const axios = require('axios');
 
 module.exports = cds.service.impl(async function () {
     const PurchaseOrderAPI = await cds.connect.to("CE_PURCHASEORDER_0001");
-    const { Transporters, PurchaseOrders, Entry, PurchasePricing } = this.entities;
+    const { Transporters, PurchaseOrders, Entry, PurchasePricing, FreightInfo } = this.entities;
 
     this.before(['CREATE', 'UPDATE'], 'Entry', async (req) => {
-        const { Details, TransporterName_Name, Purchase, Weight } = req.data;
+        const { Details, TransporterName_Name, Purchase, Weight, Freight_Desc } = req.data;
 
         if (Details && Array.isArray(Details)) {
             Details.forEach((detail) => {
@@ -42,6 +42,13 @@ module.exports = cds.service.impl(async function () {
             }
         }
 
+        if (Freight_Desc) {
+            const existingFreight = await SELECT.one.from(FreightInfo).where({ Desc: Freight_Desc });
+            if (existingFreight) {
+                await INSERT.into(FreightInfo).entries({ Desc: Freight_Desc});
+            }
+        }
+    
         if (Purchase && Array.isArray(Purchase)) {
             for (const purchase of Purchase) {
                 const { Order } = purchase;
@@ -127,6 +134,15 @@ module.exports = cds.service.impl(async function () {
         }
     });
 
+    this.on('READ', FreightInfo, async (req) => {
+        const stat = [
+            { "Desc": "Paid" },
+            { "Desc": "Not Paid" },
+        ];
+        stat.$count = stat.length;
+        return stat;
+    });
+
     this.on("READ", "PurchaseOrders", async (req) => {
         req.query.SELECT.columns = [
             { ref: ["PurchaseOrder"] },
@@ -180,7 +196,7 @@ module.exports = cds.service.impl(async function () {
     
                 const purchasePricingData = await PurchaseOrderAPI.run(
                     SELECT.from('PurOrderItemPricingElement')
-                        .columns('ConditionType', 'ConditionQuantity', 'ConditionAmount')
+                        .columns('ConditionType', 'ConditionQuantity', 'ConditionAmount', 'ConditionRateRatio')
                         .where({
                             PurchaseOrder: String(PurchaseOrder),
                             PurchaseOrderItem: String(PurchaseOrderItem)
@@ -249,35 +265,52 @@ module.exports = cds.service.impl(async function () {
     
         try {
             const updatedRowData = await fetchPricingAndSupplierDetails();
-    
+
             const xmlfun = (rowData) => {
                 const json2xmlOptions = { header: true, prettyPrint: true };
-    
-                const rowDataWithPricingElements = {
+            
+                const rowDataWithPurchaseElements = {
                     Entry: {
                         ...rowData,
                         Purchase: rowData.Purchase.map(purchase => ({
-                            ...purchase,
-                            PricingElements: purchase.PricingElements ? purchase.PricingElements.map(pricing => ({
-                                PricingElement: {
-                                    ConditionType: pricing.ConditionType,
-                                    ConditionQuantity: pricing.ConditionQuantity,
-                                    ConditionAmount: pricing.ConditionAmount
-                                }
-                            })) : [],
-                            SupplierAddress: purchase.SupplierAddress ? purchase.SupplierAddress.map(address => ({
-                                CityName: address.CityName,
-                                PostalCode: address.PostalCode,
-                                StreetName: address.StreetName,
-                                OrganizationName1: address.OrganizationName1,
-                                EmailAddress: address.EmailAddress,
-                                SupplierAddressID: address.SupplierAddressID
-                            })) : []
+                            PurchaseElements: {
+                            PurchaseOrder: purchase.PurchaseOrder,
+                            PurchaseOrderItem: purchase.PurchaseOrderItem,
+                            PurchaseOrderItemText: purchase.PurchaseOrderItemText,
+                            Plant: purchase.Plant,
+                            TaxCode: purchase.TaxCode,
+                            BaseUnit: purchase.BaseUnit,
+                            Material: purchase.Material,
+                            CompanyCode: purchase.CompanyCode,
+                            OrderQuantity: purchase.OrderQuantity,
+                            OrderPriceUnit: purchase.OrderPriceUnit,
+                            StorageLocation: purchase.StorageLocation || '',
+                            ConsumptionTaxCtrlCode: purchase.ConsumptionTaxCtrlCode,
+                            
+                                PricingElements: purchase.PricingElements ? purchase.PricingElements.map(pricing => ({
+                                    PricingElement: {
+                                        ConditionType: pricing.ConditionType,
+                                        ConditionQuantity: pricing.ConditionQuantity,
+                                        ConditionAmount: pricing.ConditionAmount,
+                                        ConditionRateRatio: pricing.ConditionRateRatio
+                                    }
+                                })) : [],
+                                SupplierAddress: purchase.SupplierAddress ? purchase.SupplierAddress.map(address => ({
+                                    Address: {
+                                        CityName: address.CityName,
+                                        PostalCode: address.PostalCode,
+                                        StreetName: address.StreetName,
+                                        OrganizationName1: address.OrganizationName1,
+                                        EmailAddress: address.EmailAddress,
+                                        SupplierAddressID: address.SupplierAddressID
+                                    }
+                                })) : []
+                            }
                         }))
                     }
                 };
-    
-                const xmlData = json2xml(rowDataWithPricingElements, json2xmlOptions);
+            
+                const xmlData = json2xml(rowDataWithPurchaseElements, json2xmlOptions);
                 return xmlData;
             };
     
