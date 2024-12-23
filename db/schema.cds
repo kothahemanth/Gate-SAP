@@ -51,6 +51,8 @@ entity Entry : cuid, managed {
     Note : String(150);
     @title: 'Freight'
     Freight : Association to FreightInfo;
+    @title: 'Pay-to Vendor No.'
+    VendorNo : String(150);
 
     Details : Composition of many {
     @UI.Hidden 
@@ -97,27 +99,27 @@ entity Entry : cuid, managed {
             @title: 'Purchase Order'
             PurchaseOrder :String(150);
             @title: 'Item'
-            @readonly PurchaseOrderItem : Decimal(10, 2);
+            PurchaseOrderItem : Decimal(10, 2);
             @title: 'Purchase Order Item Text'
-            @readonly PurchaseOrderItemText : String(150);
+            PurchaseOrderItemText : String(150);
             @title: 'Material'
-            @readonly Material : String(150);
+            Material : String(150);
             @title: 'Plant'
-            @readonly Plant : String(150);
+            Plant : String(150);
             @title: 'Base Unit'
-            @readonly BaseUnit : String(150);
+            BaseUnit : String(150);
             @title: 'Quantity'
-            @readonly OrderQuantity : Decimal(10, 2);
+            OrderQuantity : Decimal(10, 2);
             @title: 'Storage Location'
-            @readonly StorageLocation : String(150);
+            StorageLocation : String(150);
             @title: 'Company Code'
-            @readonly CompanyCode : String(150);
+            CompanyCode : String(150);
             @title: 'Tax Code'
-            @readonly TaxCode : String(150);
+            TaxCode : String(150);
             @title: 'HSN Code'
-            @readonly ConsumptionTaxCtrlCode : String(150);
+            ConsumptionTaxCtrlCode : String(150);
             @title: 'UOP'
-            @readonly OrderPriceUnit : String(150);
+            OrderPriceUnit : String(150);
             @title: 'Department'
             Departmen : String(150);
             @title: 'Indent No.'

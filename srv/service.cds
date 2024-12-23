@@ -212,6 +212,11 @@ annotate satinfotech.Entry with @(
             ![@HTML5.CssDefaults]: {width:'5rem'},
             Value: Freight_Desc
         },
+        {
+            Label: 'Pay-to Vendor No.',
+            ![@HTML5.CssDefaults]: {width:'5rem'},
+            Value: VendorNo
+        },
     ],
     UI.FieldGroup #GateEntryDetails: {
         $Type: 'UI.FieldGroupType',
@@ -307,6 +312,10 @@ annotate satinfotech.Entry with @(
             {
                 $Type: 'UI.DataField',
                 Value: Freight_Desc
+            },
+            {
+                $Type: 'UI.DataField',
+                Value: VendorNo
             },
         ]
     },

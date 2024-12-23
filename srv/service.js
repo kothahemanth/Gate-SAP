@@ -175,7 +175,8 @@ module.exports = cds.service.impl(async function () {
                 '*',
                 { ref: ['Details'], expand: ['*'] },
                 { ref: ['Purchase'], expand: ['*'] },
-                { ref: ['Weight'], expand: ['*'] }
+                { ref: ['Weight'], expand: ['*'] },
+                { ref: ['Remarks'], expand: ['*']}
             )
             .where({ ID });
     
